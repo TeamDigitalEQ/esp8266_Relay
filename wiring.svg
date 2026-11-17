@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 660" width="980" height="660" font-family="Segoe UI,Arial,sans-serif">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<style>.t{font-size:14px;fill:#1c2330}.s{font-size:12px;fill:#5b6575}.h{font-size:16px;font-weight:700;fill:#1c2330}.w{stroke-width:2.2;fill:none}.p{fill:#1c2330}</style>
+<text x="490.0" y="30" text-anchor="middle" class="h" style="font-size:20px">Relay Scheduler 8 - wiring (Wemos D1 mini)</text>
+<rect x="360" y="56" width="250" height="580" rx="14" fill="#e8eefc" stroke="#3b5bdb" stroke-width="2.5"/>
+<text x="485.0" y="84" text-anchor="middle" class="h">Wemos D1 mini</text>
+<text x="485.0" y="102" text-anchor="middle" class="s">ESP8266, 3.3 V logic</text>
+<rect x="760" y="56" width="200" height="580" rx="12" fill="#fff4e6" stroke="#e8590c" stroke-width="2.5"/>
+<text x="860.0" y="84" text-anchor="middle" class="h">8-relay board</text>
+<text x="860.0" y="102" text-anchor="middle" class="s">optocoupler, active LOW</text>
+<circle cx="610" cy="150" r="5" class="p"/>
+<text x="598" y="155" text-anchor="end" class="t"><tspan font-weight="700">D1</tspan> <tspan class="s">GPIO5</tspan></text>
+<line x1="610" y1="150" x2="760" y2="150" class="w" stroke="#12b886"/>
+<circle cx="760" cy="150" r="5" class="p"/>
+<text x="774" y="155" class="t">IN1  <tspan class="s">relay 1</tspan></text>
+<circle cx="610" cy="196" r="5" class="p"/>
+<text x="598" y="201" text-anchor="end" class="t"><tspan font-weight="700">D2</tspan> <tspan class="s">GPIO4</tspan></text>
+<line x1="610" y1="196" x2="760" y2="196" class="w" stroke="#4c6ef5"/>
+<circle cx="760" cy="196" r="5" class="p"/>
+<text x="774" y="201" class="t">IN2  <tspan class="s">relay 2</tspan></text>
+<circle cx="610" cy="242" r="5" class="p"/>
+<text x="598" y="247" text-anchor="end" class="t"><tspan font-weight="700">D5</tspan> <tspan class="s">GPIO14</tspan></text>
+<line x1="610" y1="242" x2="760" y2="242" class="w" stroke="#f59f00"/>
+<circle cx="760" cy="242" r="5" class="p"/>
+<text x="774" y="247" class="t">IN3  <tspan class="s">relay 3</tspan></text>
+<circle cx="610" cy="288" r="5" class="p"/>
+<text x="598" y="293" text-anchor="end" class="t"><tspan font-weight="700">D6</tspan> <tspan class="s">GPIO12</tspan></text>
+<line x1="610" y1="288" x2="760" y2="288" class="w" stroke="#e8590c"/>
+<circle cx="760" cy="288" r="5" class="p"/>
+<text x="774" y="293" class="t">IN4  <tspan class="s">relay 4</tspan></text>
+<circle cx="610" cy="334" r="5" class="p"/>
+<text x="598" y="339" text-anchor="end" class="t"><tspan font-weight="700">D7</tspan> <tspan class="s">GPIO13</tspan></text>
+<line x1="610" y1="334" x2="760" y2="334" class="w" stroke="#e03131"/>
+<circle cx="760" cy="334" r="5" class="p"/>
+<text x="774" y="339" class="t">IN5  <tspan class="s">relay 5</tspan></text>
+<circle cx="610" cy="380" r="5" class="p"/>
+<text x="598" y="385" text-anchor="end" class="t"><tspan font-weight="700">D0</tspan> <tspan class="s">GPIO16</tspan></text>
+<line x1="610" y1="380" x2="760" y2="380" class="w" stroke="#15aabf"/>
+<circle cx="760" cy="380" r="5" class="p"/>
+<text x="774" y="385" class="t">IN6  <tspan class="s">relay 6</tspan></text>
+<circle cx="610" cy="426" r="5" class="p"/>
+<text x="598" y="431" text-anchor="end" class="t"><tspan font-weight="700">D3</tspan> <tspan class="s">GPIO0</tspan></text>
+<line x1="610" y1="426" x2="760" y2="426" class="w" stroke="#c2a500"/>
+<circle cx="760" cy="426" r="5" class="p"/>
+<text x="774" y="431" class="t">IN7  <tspan class="s">relay 7</tspan></text>
+<circle cx="610" cy="472" r="5" class="p"/>
+<text x="598" y="477" text-anchor="end" class="t"><tspan font-weight="700">RX</tspan> <tspan class="s">GPIO3</tspan></text>
+<line x1="610" y1="472" x2="760" y2="472" class="w" stroke="#d6336c"/>
+<circle cx="760" cy="472" r="5" class="p"/>
+<text x="774" y="477" class="t">IN8  <tspan class="s">relay 8</tspan></text>
+<text x="774" y="532" class="s" font-weight="700">Power of the relay board</text>
+<text x="774" y="554" class="t" style="font-size:12px">VCC: 3V3 of the D1 mini</text>
+<text x="774" y="574" class="t" style="font-size:12px">JD-VCC: external 5 V supply</text>
+<text x="774" y="594" class="t" style="font-size:12px">(remove the jumper)</text>
+<text x="774" y="614" class="t" style="font-size:12px">GND: common ground</text>
+<rect x="20" y="150" width="240" height="190" rx="12" fill="#f3e8ff" stroke="#9c36b5" stroke-width="2.5"/>
+<text x="140.0" y="178" text-anchor="middle" class="h">IR receiver</text>
+<text x="140.0" y="196" text-anchor="middle" class="s">VS1838B / TSOP38238</text>
+<circle cx="360" cy="236" r="5" class="p"/><text x="372" y="241" class="t"><tspan font-weight="700">D4</tspan> <tspan class="s">GPIO2</tspan></text>
+<circle cx="360" cy="286" r="5" class="p"/><text x="372" y="291" class="t"><tspan font-weight="700">3V3</tspan> <tspan class="s"></tspan></text>
+<circle cx="360" cy="326" r="5" class="p"/><text x="372" y="331" class="t"><tspan font-weight="700">G</tspan> <tspan class="s"></tspan></text>
+<line x1="260" y1="236" x2="360" y2="236" class="w" stroke="#9c36b5"/><circle cx="260" cy="236" r="5" class="p"/>
+<text x="248" y="241" text-anchor="end" class="t">OUT</text>
+<line x1="260" y1="286" x2="360" y2="286" class="w" stroke="#e03131"/><circle cx="260" cy="286" r="5" class="p"/>
+<text x="248" y="291" text-anchor="end" class="t">VCC</text>
+<line x1="260" y1="326" x2="360" y2="326" class="w" stroke="#1c2330"/><circle cx="260" cy="326" r="5" class="p"/>
+<text x="248" y="331" text-anchor="end" class="t">GND</text>
+<text x="485.0" y="602" text-anchor="middle" class="s">Supply: 5 V into the 5V pin or USB</text>
+</svg>
