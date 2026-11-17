@@ -2,7 +2,7 @@
 
 **Web-controlled 8-channel relay timer for the Wemos D1 mini (ESP8266), with infrared remote control.**
 
-Version **1.1** · Power by Team DigitalEQ
+Version **1.18** · Power by Team DigitalEQ
 
 ![Dashboard](docs/screenshots/02-dashboard.png)
 
