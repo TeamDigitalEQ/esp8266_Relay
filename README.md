@@ -2,7 +2,7 @@
 
 **Web-controlled 8-channel relay timer for the Wemos D1 mini (ESP8266), with infrared remote control.**
 
-Version **1.18** · Power by Team DigitalEQ
+Version **2.0** · Power by Team DigitalEQ
 
 ![Dashboard](docs/screenshots/02-dashboard.png)
 
@@ -53,11 +53,11 @@ over MQTT.
 | **Scheduler** | Up to **24 periods per relay**, each with an ON time, an OFF time and seven weekday buttons. Periods may run past midnight (for example 22:00 to 02:00) |
 | **Manual control** | Tap an output on the dashboard to switch it, or use *All on* / *All off*. A manual change lasts until the next scheduled change of that relay |
 | **IR remote** | Learn any infrared remote: one button per relay, *all on*, *all off* and *schedule on/off*. 11 buttons in total |
-| **Home Assistant** | MQTT with automatic discovery: 8 relay switches, a *Schedule* switch and a WiFi signal sensor appear in Home Assistant without any YAML. Also works with any other MQTT client (Node-RED, openHAB, ioBroker) |
+| **Home Assistant** | MQTT with automatic discovery: 8 relay **lights** (or switches, your choice), a *Schedule* switch and a WiFi signal sensor appear in Home Assistant without any YAML. Also works with any other MQTT client (Node-RED, openHAB, ioBroker) |
 | **Clock** | Internet time (NTP) with time zone and daylight saving, or the time of your browser when there is no internet |
 | **Network** | WiFi station with DHCP or fixed address, fallback access point, `relayscheduler.local` name, optional extra port and DNS name for access from the internet |
 | **Security** | Login with salted SHA-256 password, forced password change on first use, lock-out after failed attempts, one signed-in device at a time |
-| **Interface** | Responsive dark interface, 8 languages (English, Romanian, Italian, Portuguese, Spanish, German, French, Russian), works without internet access |
+| **Interface** | Responsive interface with colour themes (Midnight, Daylight, AMOLED and your own Custom theme; themes need an activated licence), 8 languages (English, Romanian, Italian, Portuguese, Spanish, German, French, Russian), works without internet access |
 | **Maintenance** | Over-the-air firmware update, factory reset from the web page, memory and flash information |
 | **Reliability** | All relays start OFF after a power cut and take their scheduled state as soon as the clock is known. Settings are stored with a checksum and flash wear is minimised |
 
@@ -146,13 +146,8 @@ The same diagram, the pin table and the connection notes are also built into the
 
 ## Programming the firmware
 
-The firmware is written to the Wemos D1 mini over USB with the **Espressif Flash Download Tool**. You need one
-compiled `.bin` file. The order is always: **erase the flash first, then write the `.bin` at address `0x0`**.
 
-### 1. Get the `.bin` file
-
-If you have a ready-made `RelayScheduler11.ino.bin`,
-### 2. Flash it with the Espressif Flash Download Tool
+### Flash it with the Espressif Flash Download Tool
 
 Download the tool from Espressif: <https://dl.espressif.com/public/flash_download_tool.zip>
 ([user guide](https://docs.espressif.com/projects/esp-test-tools/en/latest/esp32/production_stage/tools/flash_download_tool.html)).
@@ -169,7 +164,7 @@ programming uses (see [Wiring](#wiring)).
    *Erasing deletes everything stored in the device: settings, schedule, learned IR buttons and the licence record.
    The activation key of a licensed device stays valid and is entered again afterwards. For a device that is already
    installed, use the [update over WiFi](#over-wifi) instead.*
-5. **Write the firmware.** In the first line of *Download Path Config* tick the box, choose `RelayScheduler11.ino.bin`
+5. **Write the firmware.** In the first line of *Download Path Config* tick the box, choose your `.bin` file
    and type the address **`0x0`**.
 6. Leave *SPI Flash Config* at its defaults (in current tool versions it follows the firmware build). If the fields can
    be edited, use **SPI SPEED 40 MHz**, **SPI MODE DIO** and a flash size of **32 Mbit (4 MB)**. Tick **DoNotChgBin** if it is shown.
@@ -177,9 +172,6 @@ programming uses (see [Wiring](#wiring)).
 8. Disconnect and reconnect the USB cable (or press the **RST** button on the board). The device starts and opens its WiFi
    network, see [First start](#first-start).
 9. Reconnect the relay board only after the firmware has started.
-
-If the tool cannot connect: close the Arduino IDE and any serial monitor, lower **BAUD** to 115200, then try again. If it still
-fails, put the module in download mode by connecting pin **D3** to **G** (GND), press **RST**, press **START**, and remove the wire after the flashing.
 
 ---
 
@@ -237,11 +229,14 @@ The settings are grouped in five tabs:
 
 | Tab | Content |
 |-----|---------|
-| **General** | Language, account (user name and password), date and time (time zone, time server, take the time of this device) |
+| **General** | Language, colour theme, bar effect, account (user name and password), date and time (time zone, time server, take the time of this device) |
 | **IR remote** | Switch the remote on or off and [learn its buttons](#infrared-remote-control) |
 | **Wiring** | Connection diagram, pin table (with your relay names) and step-by-step connection notes, always at hand in the device |
 | **Device** | Hardware and memory information, restart, factory reset, firmware update |
-| **Licence** | Licence state and activation, hardware ID, donation QR code, contact, terms of use |
+| **Licence** | Licence state and activation, hardware ID, PayPal donation button and QR code (10 EUR), contact, terms of use |
+
+* **Colour themes** (Settings → General → Theme) are a feature of activated devices: Midnight, Daylight, AMOLED and a custom colour editor. On a trial device the picker is shown locked and the interface uses the default *Midnight* theme. The chosen theme is remembered in the browser and also used on the sign-in page.
+* **Bar effect** (Settings → General, and on the sign-in page): a bright bar runs round the field you are typing in, a light follows the pointer across the menu bars, and on the sign-in page the card turns over when you change the language. Free for everyone; switch it off for a plain look.
 
 ---
 
@@ -293,14 +288,45 @@ Home Assistant then creates all entities by itself (MQTT discovery), you do not 
 
 ### What appears in Home Assistant
 
+![Home Assistant settings: light or switch](docs/screenshots/14-mqtt-light-or-switch.png)
+
 | Entity | Type | Function |
 |--------|------|----------|
-| Relay 1 to Relay 8 (or the names you gave them) | Switch | Switch the relay. The state follows every change: web page, schedule, IR remote |
+| Relay 1 to Relay 8 (or the names you gave them) | Light | Switch the relay on and off (`light.…`). They are lights, not plugs, so they work in light groups, areas, voice assistants and *turn off all lights* automations. The state follows every change: web page, schedule, IR remote |
 | Schedule | Switch | The master switch of the whole schedule (same as the switch on the *Relays* page) |
 | WiFi signal | Sensor | Signal strength in dBm (diagnostic) |
 
-* A switch sent from Home Assistant behaves like a manual change on the web page: it lasts until the next scheduled change
+* **Light or switch:** under *Network → Home Assistant (MQTT) → Relays appear in Home Assistant as* choose **Light** (default) or
+  **Switch** (power-socket icon, for plugs). Press **Save**: the device reconnects, announces the relays in the chosen type and
+  removes the entities of the other type. Entity IDs change between `light.…` and `switch.…`, so check your automations afterwards.
+  The MQTT command and state topics change with the type too (`<base>/light/N/…` or `<base>/switch/N/…`), and the old retained
+  topics are cleared.
+* A command sent from Home Assistant behaves like a manual change on the web page: it lasts until the next scheduled change
   of that relay. To keep a relay off or on for good, switch the schedule of that relay (or the *Schedule* switch) off.
+* Example automation (turn *Relay 1* on at sunset and off at 23:00):
+
+  ```yaml
+  automation:
+    - alias: "Relay 1 at sunset"
+      trigger:
+        - platform: sun
+          event: sunset
+      action:
+        - service: light.turn_on
+          target:
+            entity_id: light.relay_1
+    - alias: "Relay 1 off at night"
+      trigger:
+        - platform: time
+          at: "23:00:00"
+      action:
+        - service: light.turn_off
+          target:
+            entity_id: light.relay_1
+  ```
+
+  The entity ID follows the name you gave the relay (a relay named *Garden* becomes `light.garden`). It is shown under
+  *Settings → Devices & services → MQTT → Relay Scheduler*.
 * When you rename a relay on the *Relays* page and press **Save changes**, the new name is sent to Home Assistant at once.
 * While the device is offline (power cut, WiFi lost) Home Assistant shows its entities as *unavailable*.
 * MQTT works only when the device is connected to your WiFi, not in the fallback access point.
@@ -314,12 +340,17 @@ The base topic is `relayscheduler/<chip id>`; the chip id is the last six digits
 | Topic | Direction | Content |
 |-------|-----------|---------|
 | `<base>/status` | device → broker | `online` / `offline` (retained, `offline` is the last will) |
-| `<base>/relay/N/state` | device → broker | `ON` / `OFF`, N = 1 to 8 (retained) |
-| `<base>/relay/N/set` | broker → device | `ON` / `OFF` |
+| `<base>/light/N/state` | device → broker | `ON` / `OFF`, N = 1 to 8 (retained). Used when the relays appear as **lights** |
+| `<base>/light/N/set` | broker → device | `ON` / `OFF` (lights) |
+| `<base>/switch/N/state` | device → broker | `ON` / `OFF`, N = 1 to 8 (retained). Used when the relays appear as **switches** |
+| `<base>/switch/N/set` | broker → device | `ON` / `OFF` (switches) |
 | `<base>/schedule/state` | device → broker | `ON` / `OFF` (retained) |
 | `<base>/schedule/set` | broker → device | `ON` / `OFF` |
 | `<base>/rssi` | device → broker | WiFi signal in dBm, every 60 s |
 | `homeassistant/<type>/rs_<MAC>_.../config` | device → broker | Discovery messages (retained) |
+
+Only the topics of the selected type (light or switch) are active. When you change the type, the device also changes the
+command and state topics and removes the old discovery entry and the old retained state.
 
 The device also listens to `homeassistant/status`: when Home Assistant starts it sends all states and discovery messages again.
 
@@ -373,22 +404,28 @@ Details:
   and neither a factory reset nor a firmware update restarts it.
 * After the trial the schedule stops and the sign-in page is replaced by an activation page with the hardware ID and a
   field for the **activation key**.
-* A one-time licence costs **10 EUR**. Send the hardware ID (**Settings → Licence**) by e-mail to `contact@digital250v.eu` to buy it.
-  The key has the form `XXXX-XXXX-XXXX-XXXX` and belongs to the hardware ID (MAC address) of this one device.
   Once accepted it is permanent.
 * The key can also be entered during the trial: **Settings → Licence**.
-* Five wrong keys in a row cause a five-minute pause.
-
 ---
 
 ## Updating and factory reset
 
 ### Over WiFi
 
-1. Build the `.bin` as described in [Programming the firmware](#1-get-the-bin-file) (*Sketch → Export Compiled Binary*).
+1. Build the `.bin` as described in [Programming the firmware](#1-compile-the-bin-file) (*Sketch → Export Compiled Binary*).
 2. **Settings → Device → Firmware**, choose the `.bin` file, press **Install update**.
    The device restarts by itself. Updates are accepted only after the default password has been changed.
 3. Settings, schedule, learned IR buttons and the licence are kept.
+
+### Backup and restore (files)
+
+![Save to file and Load from file on the Relays page](docs/screenshots/12-relays-save-load-buttons.png)
+
+![Backup and restore on the Device tab](docs/screenshots/13-device-backup-restore.png)
+
+* **Schedule:** *Relays → Save to file / Load from file*. The file holds the master switch, the relay names, each relay's on/off switch and all periods. Loading replaces the whole schedule and applies it at once.
+* **Configuration:** *Settings → Device → Backup and restore*. The file holds the network settings (including the fallback access point password), Home Assistant (MQTT) address, port and user, the time zone and time server, and the IR on/off switch. WiFi, MQTT and account passwords and learned IR buttons are **not** stored. Loading changes the network settings only when they differ, and the device then restarts.
+* Both files are plain JSON text, named with the chip ID and the date. Colour theme and bar effect are stored in the browser and are not part of the files.
 
 ### Factory reset
 
@@ -406,7 +443,7 @@ After a factory reset the device is again reachable at `RelayScheduler-XXXXXX` /
 |---------|---------------|
 | No COM port appears when the D1 mini is connected | Use a USB data cable, try another port, install the CH340 driver |
 | The Flash Download Tool cannot connect | Close the Arduino IDE and serial monitors, lower BAUD to 115200, disconnect the relay board, or use the D3-to-GND method in [Programming the firmware](#programming-the-firmware) |
-| The device does not start after flashing | Erase the flash first, write `RelayScheduler11.ino.bin` at address `0x0` only, then power the board again. If it still does not start, try SPI MODE DOUT |
+| The device does not start after flashing | Erase the flash first, write the `.bin` file at address `0x0` only, then power the board again. If it still does not start, try SPI MODE DOUT |
 | Cannot find the device | Look for the WiFi network `RelayScheduler-XXXXXX` and open `http://192.168.4.1`. Otherwise read the address from your router |
 | Relays are inverted (on when they should be off) | Your board is active HIGH: set `RELAY_ACTIVE_LOW` to `0` in `Config.h` and upload again |
 | A relay clicks while uploading over USB | Normal for relays 7 and 8 (D3 and RX). Disconnect the relay board for the first USB upload |
@@ -430,35 +467,17 @@ After a factory reset the device is again reachable at `RelayScheduler-XXXXXX` /
 
 | | |
 |--|--|
-| Controller | ESP8266 (Wemos D1 mini), 80 MHz, 4 MB flash |
+| Controller | ESP8266 (Wemos D1 mini), 160 MHz, 4 MB flash |
 | Outputs | 8 relays, 3.3 V logic signals, active LOW by default |
 | Periods | 24 per relay, minute resolution, per-period weekdays |
 | IR remote | 11 learnable buttons, receiver on D4, decoding by IRremoteESP8266 |
 | Home Assistant | MQTT 3.1.1 with discovery, library PubSubClient, no TLS |
 | Settings storage | Emulated EEPROM in flash with CRC; written only when something changed |
-| Web interface | Stored compressed in flash (about 50 KB), no internet access needed |
-| Web server | Port 80 (always) and one optional extra port |
+| Web interface | Stored compressed in flash (about 70 KB), no internet access needed |
+| Web server | optional port |
 | Hostname | `relayscheduler.local` |
 | Fallback access point | `RelayScheduler-XXXXXX`, `192.168.4.1`, password `relay12345` (changeable) |
 | Session | One signed-in device, idle time-out 5 minutes |
-
-### Web API
-
-All requests except the sign-in pages need a valid session. Answers are JSON.
-
-| Method | Path | Purpose |
-|--------|------|---------|
-| GET | `/api/status` | Live state: clock, network, relay bit mask `rl`, IR state, memory, licence |
-| GET | `/api/config` | Schedule, IR codes, network and system settings |
-| POST | `/api/schedule` | Save schedule: `master`, and for each relay N (0 to 7): `enN`, `lN` (name), `tmN` (periods `HH:MM-HH:MM/days;...`, days = bit mask, bit 0 = Monday) |
-| POST | `/api/relay` | `ch` = 0..7 or `all`, `state` = `1`, `0` or `t` (toggle) |
-| POST | `/api/ir` | `en` = 0/1, `clear` = button number or `all`, `cancel` = 1 |
-| POST | `/api/irlearn` | `a` = button number 0..10: wait for the next remote button |
-| POST | `/api/net`, `/api/system`, `/api/time`, `/api/account` | Network, system, clock and account settings |
-| POST | `/api/mqtt` | Home Assistant: `en` = 0/1, `host`, `port`, `user`, `pw` = 1 to replace the password with `pass`. Applied at once |
-| GET | `/api/scan` | WiFi scan |
-| POST | `/api/reboot`, `/api/factory`, `/api/update` | Restart, factory reset, firmware upload |
-| GET / POST | `/api/license`, `/api/activate` | Licence state and activation |
 
 ### Limits
 
@@ -468,6 +487,23 @@ All requests except the sign-in pages need a valid session. Answers are JSON.
 
 ---
 
+## Project structure
+
+| File or folder | Content |
+|----------------|---------|
+| `RelayScheduler25.ino` | Main sketch: `setup()` and `loop()` |
+| `Config.h`, `Config.cpp` | Pins, constants (`FW_VERSION`, `MAX_TIMERS`), settings stored in the emulated EEPROM |
+| `Relay.*`, `Scheduler.*`, `ScheduleLogic.h` | Relay outputs and the schedule logic |
+| `IR.*` | Infrared receiver and the learn function |
+| `Mqtt.*`, `PubSubClient.*` | Home Assistant (MQTT) with discovery; the MQTT client library is part of the folder |
+| `NetManager.*`, `Auth.*`, `Web.*` | WiFi and fallback access point, sign-in, web server and API |
+| `License.*`, `LicenseKey.h`, `LicSecret.h` | Trial counter and activation key. **`LicSecret.h` contains the licence secret: do not publish the folder together with it** |
+| `WebUI.h` | The web pages, compressed. **Generated, do not edit** |
+| `tools/` | `WebUI.src.h` (source of the web pages), `make_gz.py`, `webui_convert.py`, `preview.py`, `test_schedule.cpp`, and `README_EDITARE.md` (guide in Romanian) |
+| `html_edit/` | The pages as plain `.html` files for editing in Dreamweaver or another editor |
+| `docs/` | Screenshots, wiring diagram, pinout drawings and the licence note |
+
+---
 
 ## Safety
 
