@@ -461,8 +461,6 @@ After a factory reset the device is again reachable at `RelayScheduler-XXXXXX` /
 
 ---
 
-## Technical reference
-
 ### Specifications
 
 | | |
@@ -484,24 +482,6 @@ After a factory reset the device is again reachable at `RelayScheduler-XXXXXX` /
 * Relay name: 16 characters.
 * Periods per relay: 24 (`MAX_TIMERS` in `Config.h`; changing it changes the settings layout).
 * A period's ON and OFF times must differ.
-
----
-
-## Project structure
-
-| File or folder | Content |
-|----------------|---------|
-| `RelayScheduler25.ino` | Main sketch: `setup()` and `loop()` |
-| `Config.h`, `Config.cpp` | Pins, constants (`FW_VERSION`, `MAX_TIMERS`), settings stored in the emulated EEPROM |
-| `Relay.*`, `Scheduler.*`, `ScheduleLogic.h` | Relay outputs and the schedule logic |
-| `IR.*` | Infrared receiver and the learn function |
-| `Mqtt.*`, `PubSubClient.*` | Home Assistant (MQTT) with discovery; the MQTT client library is part of the folder |
-| `NetManager.*`, `Auth.*`, `Web.*` | WiFi and fallback access point, sign-in, web server and API |
-| `License.*`, `LicenseKey.h`, `LicSecret.h` | Trial counter and activation key. **`LicSecret.h` contains the licence secret: do not publish the folder together with it** |
-| `WebUI.h` | The web pages, compressed. **Generated, do not edit** |
-| `tools/` | `WebUI.src.h` (source of the web pages), `make_gz.py`, `webui_convert.py`, `preview.py`, `test_schedule.cpp`, and `README_EDITARE.md` (guide in Romanian) |
-| `html_edit/` | The pages as plain `.html` files for editing in Dreamweaver or another editor |
-| `docs/` | Screenshots, wiring diagram, pinout drawings and the licence note |
 
 ---
 
