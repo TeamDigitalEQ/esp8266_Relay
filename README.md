@@ -74,8 +74,6 @@ The screenshots show demonstration data.
 | ![General](docs/screenshots/05-settings-general.png) | ![IR remote](docs/screenshots/06-settings-ir-remote.png) |
 | **Settings: Device** | **Settings: Licence** |
 | ![Device](docs/screenshots/08-settings-device.png) | ![Licence](docs/screenshots/09-settings-licence.png) |
-| **Trial period expired** | **Cloned firmware detected** |
-| ![Trial expired](docs/screenshots/10-trial-expired.png) | ![Cloned firmware](docs/screenshots/11-device-cloned.png) |
 
 **Settings: Wiring** (connection diagram, pin table and connection notes, built into the device):
 
