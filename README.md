@@ -2,7 +2,7 @@
 
 **Web-controlled 8-channel relay timer for the Wemos D1 mini (ESP8266), with infrared remote control.**
 
-Version **2.0** · Power by Team DigitalEQ
+Version **2.2** · Power by Team DigitalEQ
 
 ![Dashboard](docs/screenshots/02-dashboard.png)
 
@@ -25,23 +25,44 @@ over MQTT.
 
 ## Contents
 
-1. [Features](#features)
-2. [Hardware](#hardware)
-3. [Wiring](#wiring)
-4. [Programming the firmware](#programming-the-firmware)
-5. [First start](#first-start)
-6. [Using the web interface](#using-the-web-interface)
-7. [Infrared remote control](#infrared-remote-control)
-8. [Home Assistant (MQTT)](#home-assistant-mqtt)
-9. [Remote access from the internet](#remote-access-from-the-internet)
-10. [Behaviour in detail](#behaviour-in-detail)
-11. [Licence and trial](#licence-and-trial)
-12. [Updating, backup and factory reset](#updating-and-factory-reset)
-13. [Troubleshooting](#troubleshooting)
-14. [Technical reference](#technical-reference)
-15. [Project structure and building the web page](#project-structure)
-16. [Safety](#safety)
-17. [Contact](#contact)
+1. [What is new in v2.2](#what-is-new-in-v22)
+2. [Features](#features)
+3. [Hardware](#hardware)
+4. [Wiring](#wiring)
+5. [Programming the firmware](#programming-the-firmware)
+6. [First start](#first-start)
+7. [Using the web interface](#using-the-web-interface)
+8. [Infrared remote control](#infrared-remote-control)
+9. [Home Assistant (MQTT)](#home-assistant-mqtt)
+10. [Amazon Alexa](#amazon-alexa)
+11. [Remote access from the internet](#remote-access-from-the-internet)
+12. [Behaviour in detail](#behaviour-in-detail)
+13. [Licence and trial](#licence-and-trial)
+14. [Updating, backup and factory reset](#updating-and-factory-reset)
+15. [Troubleshooting](#troubleshooting)
+16. [Technical reference](#technical-reference)
+17. [Project structure and building the web page](#project-structure)
+18. [Safety](#safety)
+19. [Contact](#contact)
+
+---
+
+## What is new in v2.2
+
+Differences from version **2.1**:
+
+| Area | v2.1 | v2.2 |
+|------|------|------|
+| **Backgrounds** | 4 animated backgrounds (Network, Grid, Aurora, Circuit) or *Off* | 44 backgrounds or *Off*, one style each in the theme colours (for example Galaxy, Radar, Plasma, Starfield, Rain, Fireworks, Synthwave). Still drawn in the browser only |
+| **Galaxy** | Followed the mouse | Stays in the centre and only rotates; the new scenes do not follow the mouse either |
+| **Themes** | 8 (Midnight, Daylight, AMOLED, Cyber Neon, Polar, Carbon, Deep Space, Custom) as buttons | 18 in a compact drop-down: Sunset, Ocean, Forest, Rose, Dracula, Nord, Solar Dark, Sand, Mint and Violet added |
+| **Bar effect** | Separate *Bar effect* switch in *General* | Moved into *Background and effects* and renamed *Light follows the mouse or finger on the menu bars* |
+| **Alexa** | One name per relay (the relay name) | An **editable Alexa name per relay** (up to 24 characters, used exactly as typed, not translated). Existing Alexa settings are kept |
+| **Layout** | Phone layout | Portrait and landscape layout on every page |
+| **Backup files** | version 2.1 | Written with version 2.2; older files can still be loaded |
+| **Screenshots** | Old interface | All screenshots in `docs/screenshots` are new |
+
+Wiring, pins, scheduler, IR remote, Home Assistant and licence work as in v2.1. Settings and the licence are kept when you update over WiFi.
 
 ---
 
@@ -54,10 +75,11 @@ over MQTT.
 | **Manual control** | Tap an output on the dashboard to switch it, or use *All on* / *All off*. A manual change lasts until the next scheduled change of that relay |
 | **IR remote** | Learn any infrared remote: one button per relay, *all on*, *all off* and *schedule on/off*. 11 buttons in total |
 | **Home Assistant** | MQTT with automatic discovery: 8 relay **lights** (or switches, your choice), a *Schedule* switch and a WiFi signal sensor appear in Home Assistant without any YAML. Also works with any other MQTT client (Node-RED, openHAB, ioBroker) |
+| **Alexa** | Local Amazon Echo support (Hue emulation, no cloud): each relay is a light or a plug in Alexa; off by default |
 | **Clock** | Internet time (NTP) with time zone and daylight saving, or the time of your browser when there is no internet |
 | **Network** | WiFi station with DHCP or fixed address, fallback access point, `relayscheduler.local` name, optional extra port and DNS name for access from the internet |
 | **Security** | Login with salted SHA-256 password, forced password change on first use, lock-out after failed attempts, one signed-in device at a time |
-| **Interface** | Responsive interface with colour themes (Midnight, Daylight, AMOLED and your own Custom theme; themes need an activated licence), 8 languages (English, Romanian, Italian, Portuguese, Spanish, German, French, Russian), works without internet access |
+| **Interface** | Responsive futuristic interface with glass panels, an animated background (44 styles, or off) and 18 colour themes in a compact drop-down (Midnight, Daylight, AMOLED, Cyber Neon, Polar, Carbon, Deep Space, Sunset, Ocean, Forest, Rose, Dracula, Nord, Solar Dark, Sand, Mint, Violet and your own Custom theme; the themes need an activated licence), 8 languages (English, Romanian, Italian, Portuguese, Spanish, German, French, Russian), works without internet access |
 | **Maintenance** | Over-the-air firmware update, factory reset from the web page, memory and flash information |
 | **Reliability** | All relays start OFF after a power cut and take their scheduled state as soon as the clock is known. Settings are stored with a checksum and flash wear is minimised |
 
@@ -68,12 +90,14 @@ The screenshots show demonstration data.
 | Sign-in | Dashboard |
 |---|---|
 | ![Sign-in](docs/screenshots/01-login.png) | ![Dashboard](docs/screenshots/02-dashboard.png) |
-| **Relays and schedule** | **Network** (WiFi, IP address, remote access, Home Assistant) |
+| **Relays and schedule** | **Network** (WiFi, IP address, remote access, Home Assistant, Alexa) |
 | ![Relays and schedule](docs/screenshots/03-relays.png) | ![Network](docs/screenshots/04-network.png) |
 | **Settings: General** | **Settings: IR remote** |
 | ![General](docs/screenshots/05-settings-general.png) | ![IR remote](docs/screenshots/06-settings-ir-remote.png) |
 | **Settings: Device** | **Settings: Licence** |
 | ![Device](docs/screenshots/08-settings-device.png) | ![Licence](docs/screenshots/09-settings-licence.png) |
+| **Trial period expired** | **Cloned firmware detected** |
+| ![Trial expired](docs/screenshots/10-trial-expired.png) | ![Cloned firmware](docs/screenshots/11-device-cloned.png) |
 
 **Settings: Wiring** (connection diagram, pin table and connection notes, built into the device):
 
@@ -227,14 +251,18 @@ The settings are grouped in five tabs:
 
 | Tab | Content |
 |-----|---------|
-| **General** | Language, colour theme, bar effect, account (user name and password), date and time (time zone, time server, take the time of this device) |
+| **General** | Language, colour theme, background and effects (including the light that follows the mouse or finger), account (user name and password), date and time (time zone, time server, take the time of this device) |
 | **IR remote** | Switch the remote on or off and [learn its buttons](#infrared-remote-control) |
 | **Wiring** | Connection diagram, pin table (with your relay names) and step-by-step connection notes, always at hand in the device |
 | **Device** | Hardware and memory information, restart, factory reset, firmware update |
 | **Licence** | Licence state and activation, hardware ID, PayPal donation button and QR code (10 EUR), contact, terms of use |
 
-* **Colour themes** (Settings → General → Theme) are a feature of activated devices: Midnight, Daylight, AMOLED and a custom colour editor. On a trial device the picker is shown locked and the interface uses the default *Midnight* theme. The chosen theme is remembered in the browser and also used on the sign-in page.
-* **Bar effect** (Settings → General, and on the sign-in page): a bright bar runs round the field you are typing in, a light follows the pointer across the menu bars, and on the sign-in page the card turns over when you change the language. Free for everyone; switch it off for a plain look.
+* **Colour themes** (Settings → General → Theme) are a feature of activated devices: Midnight, Daylight, AMOLED, Cyber Neon, Polar, Carbon, Deep Space, Sunset, Ocean, Forest, Rose, Dracula, Nord, Solar Dark, Sand, Mint, Violet and a custom colour editor (18 themes in a compact drop-down). On a trial device the picker is shown locked and the interface uses the default *Midnight* theme. The chosen theme is remembered in the browser and also used on the sign-in page.
+* **Background and effects** (Settings → General): choose the animated background (14 styles such as **Network**, **Aurora**, **Galaxy** or **Radar**, plus 30 more scenes, one style each in the theme colours: **Starfield**, **Snowfall**, **Rain**, **Bubbles**, **Fireflies**, **Embers**, **Meteors**, **Ripples**, **Orbits**, **Dust**, **Lightning**, **Confetti**, **Falling leaves**, **Constellation**, **Spiral**, **Tunnel**, **Dot wave**, **Lava lamp**, **Prisms**, **Scanner**, **DNA helix**, **Heartbeat**, **Light beams**, **Sunburst**, **Fog**, **Lissajous**, **Fireworks**, **Mesh gradient**, **Polygons** and **Synthwave**; or **Off**) and its **intensity**. The new scenes and the Galaxy do not follow the mouse: the Galaxy stays in the centre and only rotates, and switch **Glass panels** (translucent panels that blur the background), **Neon glow** and **Animations** (page transitions, pulsing indicators) on or off. Free for everyone. The background and the effects are also shown on the sign-in page. They run in the browser only, so they do not load the device. If your phone or tablet is slow, choose *Off* for the background or switch *Glass panels* off. *Reset appearance* returns to the defaults. Animations are switched off automatically when the device asks for reduced motion.
+
+![Settings: theme and background](docs/screenshots/15-settings-appearance.png)
+
+* **Light follows the mouse or finger on the menu bars** (Settings → General → Background and effects, and on the sign-in page): a bright bar also runs round the field you are typing in. Turn it off for a plain look.
 
 ---
 
@@ -354,6 +382,28 @@ The device also listens to `homeassistant/status`: when Home Assistant starts it
 
 ---
 
+## Amazon Alexa
+
+The device can answer like a **Philips Hue bridge**, so an Amazon Echo finds the relays and switches them by voice. It works
+**locally** in your home WiFi: no account, no cloud, no skill to install.
+
+1. Use an Echo with built-in Hue support (Echo Plus, Echo 4th generation, Echo Show and similar).
+2. On the device open **Network → Alexa (Amazon Echo)**, switch it **on** and choose for each relay whether it appears as a
+   **Light** or a **Plug**. Press **Save**.
+3. Say **"Alexa, discover devices"** (or use the Alexa app). By default the relays appear with the names you gave them on the *Relays* page. Under each relay in the Alexa card you can type a different **name for Alexa** (up to 24 characters). It is used exactly as typed and is not translated, so you can use the word you say to Alexa in your own language.
+4. Use them like any other device: "Alexa, turn on *Lights*". A manual switch from Alexa lasts until the next scheduled change of that relay, like a switch on the web page.
+
+![Alexa settings](docs/screenshots/16-alexa.png)
+
+* *Status* shows **Ready** when the device is in your home WiFi, and how long ago Alexa last asked something.
+* Changing a relay between Light and Plug makes it a **new device** in Alexa (say *discover devices* again and delete the old one).
+* Alexa works only in the home WiFi (not in the fallback access point) and never through the remote access port.
+* The Hue protocol has **no password**: anyone on your WiFi could switch the relays. That is why Alexa is **off by default**.
+* After the trial has expired nothing can be switched by Alexa, as with every other way of switching.
+* The setting is kept in the configuration backup file and returns to *off* after a factory reset.
+
+---
+
 ## Remote access from the internet
 
 The device can additionally listen on a second port, so you can reach it from mobile data while the normal address keeps working at home.
@@ -423,7 +473,7 @@ Details:
 
 * **Schedule:** *Relays → Save to file / Load from file*. The file holds the master switch, the relay names, each relay's on/off switch and all periods. Loading replaces the whole schedule and applies it at once.
 * **Configuration:** *Settings → Device → Backup and restore*. The file holds the network settings (including the fallback access point password), Home Assistant (MQTT) address, port and user, the time zone and time server, and the IR on/off switch. WiFi, MQTT and account passwords and learned IR buttons are **not** stored. Loading changes the network settings only when they differ, and the device then restarts.
-* Both files are plain JSON text, named with the chip ID and the date. Colour theme and bar effect are stored in the browser and are not part of the files.
+* Both files are plain JSON text, named with the chip ID and the date. Colour theme, background, effects and bar effect are stored in the browser and are not part of the files.
 
 ### Factory reset
 
